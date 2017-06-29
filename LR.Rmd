@@ -1,0 +1,57 @@
+---
+title: "LinearRegression"
+author: "SP"
+date: "June 28, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Lienar Regression Exercise 1
+
+```{r state, echo=TRUE}
+# Checking current Dir
+getwd()
+# Listing files in dir
+list.files()
+# Listing files within subdirectory
+list.files("dataSets")
+# loading the dataset
+states.data <- readRDS("dataSets/states.rds") 
+# Getting rid of N/A since anova will results with error due to difference in data set size between two mod. 
+states.data <- na.omit(states.data)
+# focusing on first subset
+sts.mtr.eng <- subset(states.data, select = c("metro", "energy"))
+# checking the summary of data
+summary(sts.mtr.eng)
+# checking cor
+cor(sts.mtr.eng, use="pairwise")
+# ploting the values
+plot(sts.mtr.eng)
+# performing first model of Linear Regression
+sts.mod <- lm(energy ~ metro, data = states.data)
+summary(sts.mod)
+# Plotting the sts.mod
+plot(sts.mod)
+# creating second subset with additional variable and repearing previous steps
+sts.mtr.eng.tx.grn <- subset(states.data, select = c("metro", "energy", "toxic", "green"))
+summary(sts.mtr.eng.tx.grn)
+plot(sts.mtr.eng.tx.grn)
+cor(sts.mtr.eng.tx.grn, use="pairwise")
+mod.sts.mtr.eng.tx.grn <- lm(energy ~ metro + toxic + green, data = states.data)
+summary(mod.sts.mtr.eng.tx.grn)
+# performing anova
+anova(sts.mod, mod.sts.mtr.eng.tx.grn)
+```
+## Lienar Regression Exercise 2
+
+```{r}
+# adding the intersect 
+mod.sts.mtr.eng.tx.grn <- lm(energy ~ metro * toxic, data = states.data)
+# Adding the region 
+mod.en.region <- lm(energy ~ metro * waste + region, data = states.data)
+anova(mod.en.region)
+
+```
